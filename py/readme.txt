@@ -1,0 +1,10 @@
+0: cat
+1: dog
+2: elephant
+3: bird
+4: dolphin
+5: tiger
+6: giraffe
+7: penguin
+8: frog
+9: kangaroo
