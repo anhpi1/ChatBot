@@ -16,7 +16,6 @@ model = Sequential()
 model.add(Dense(128, input_shape=(max_token,), activation='relu'))  # Kích thước đầu vào là độ dài của các câu đã pad
 model.add(Dense(64, activation='relu'))
 model.add(Dense(10, activation='softmax'))  # Sử dụng số lớp đầu ra phù hợp
-# Biên dịch mô hình
 
 # Tải trọng số đã lưu vào mô hình
 model.load_weights('model_weights.weights.h5')
