@@ -5,11 +5,11 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import numpy as np
 import json
-max_token=50
+max_token=30
 # Tải từ điển từ tệp JSON
 with open('word_index.json', 'r') as json_file:
     word_index = json.load(json_file)
-tokenizer = Tokenizer(num_words=100, oov_token="<OOV>")
+tokenizer = Tokenizer(num_words=10000, oov_token="<OOV>")
 tokenizer.word_index = word_index
 # Tạo mô hình
 model = Sequential()
@@ -17,11 +17,11 @@ model.add(Dense(128, input_shape=(max_token,), activation='relu'))  # Kích thư
 model.add(Dense(64, activation='relu'))
 model.add(Dense(10, activation='softmax'))  # Sử dụng số lớp đầu ra phù hợp
 # Biên dịch mô hình
-model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+
 # Tải trọng số đã lưu vào mô hình
 model.load_weights('model_weights.weights.h5')
 # Câu cần dự đoán
-input_sentence = "Tigers are the largest species of the cat family."
+input_sentence = "Tigers are known for their stealth and can approach prey silently before pouncing."
 
 # Mã hóa câu
 sequence = tokenizer.texts_to_sequences([input_sentence])
