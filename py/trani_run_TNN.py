@@ -43,7 +43,7 @@ model = tf.keras.Model(inputs=input_layer, outputs=output_layer)
 model.load_weights('transformer_model.weights.h5')
 
 # Câu cần dự đoán
-input_sentence = "Tigers"
+input_sentence = "i love my cat, my cat is so dump and i like this"
 
 # Mã hóa câu
 sequence = tokenizer.texts_to_sequences([input_sentence])
