@@ -10,17 +10,19 @@ max_token=10000
 
 def read_sentences_from_file(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
-        sentences = file.readlines()  # Đọc tất cả các dòng
+        sentences = file.readlines()  
     return [sentence.strip() for sentence in sentences]  # Xóa ký tự newline
 
-# Bước 2: Đọc dữ liệu
 
+
+# dữ liệu đầu vào
 x = read_sentences_from_file('x.ta')
-# Dữ liệu đầu vào
 
-# Nhãn tương ứng
+
+# dữ liệu đầu ra
 y = read_sentences_from_file('y.ta')
-# Tạo Tokenizer
+
+# tạo word list
 tokenizer = Tokenizer(num_words=10000, oov_token="<OOV>")
 tokenizer.fit_on_texts(x)
 word_index = tokenizer.word_index

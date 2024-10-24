@@ -9,6 +9,7 @@ max_token=30
 # mở word-list
 with open('word_index.json', 'r') as json_file:
     word_index = json.load(json_file)
+
 tokenizer = Tokenizer(num_words=10000, oov_token="<OOV>")
 tokenizer.word_index = word_index
 
