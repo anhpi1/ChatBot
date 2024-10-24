@@ -32,7 +32,7 @@ X = pad_sequences(X, maxlen=max_token)
 # chia dữ liệu thành tập huấn luyện và kiểm tra
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
-# chuyển đổi y thành numpy array
+# chuyển đổi y thành array
 y_train = np.array(y_train, dtype=np.int32)
 y_test = np.array(y_test, dtype=np.int32)
 
@@ -65,10 +65,10 @@ model = Model(inputs=input_layer, outputs=output_layer)
 # biên dịch mô hình
 model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-# callback cho early stopping
+# điều kiện dừng huấn luyện
 early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
 
-# huấn luyện mô hình với early stopping
+# huấn luyện mô hình
 model.fit(X_train, y_train, epochs=60, batch_size=2, validation_data=(X_test, y_test), callbacks=[early_stopping])
 
 # đánh giá mô hình
