@@ -45,7 +45,7 @@ model.load_weights('transformer_model.weights.h5')
 # câu cần dự đoán
 input_sentence = "i love my cat, my cat is so dump and i like this"
 
-# Mã hóa câu
+# mã hóa câu
 sequence = tokenizer.texts_to_sequences([input_sentence])
 padded_sequence = pad_sequences(sequence, maxlen=max_token)
 
@@ -54,5 +54,5 @@ predictions = model.predict(padded_sequence)
 print(f'Predicted Probabilities: {predictions}')
 
 # in kết quả dự đoán
-predicted_class = np.argmax(predictions, axis=1)  # Lấy chỉ số của lớp có xác suất cao nhất
+predicted_class = np.argmax(predictions, axis=1)  # lấy chỉ số của lớp có xác suất cao nhất
 print(f'Predicted Class: {predicted_class}')

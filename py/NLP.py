@@ -11,7 +11,7 @@ max_token=10000
 def read_sentences_from_file(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
         sentences = file.readlines()  
-    return [sentence.strip() for sentence in sentences]  # Xóa ký tự newline
+    return [sentence.strip() for sentence in sentences]  # xóa ký tự newline
 
 
 
