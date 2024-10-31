@@ -9,6 +9,7 @@ number_of_input = 0
 file_word_list = ''
 num_words_list = 0
 number_of_outputs = 0
+number_of_model = 0
 
 # tải tham số
 with open("parameter.ta", "r") as file:
@@ -34,6 +35,10 @@ for line in lines:
         if value.isdigit():
             value = int(value)
         num_words_list = value
+    if key == "number_of_model":
+        if value.isdigit():
+            value = int(value)
+        number_of_model = value
     if key == "file_word_list":
         file_word_list = value.strip("'")
 
@@ -47,7 +52,7 @@ tokenizer.word_index = word_index
 models = []
 
 # Tạo và tải các mô hình từ các trọng số
-for name_mode in range(1, 7):
+for name_mode in range(1, number_of_model+1):
     new_model = TNN.create_model(number_of_outputs, number_of_input, num_words_list)
     new_model.load_weights('data_train/weight_model/model_{}.weights.h5'.format(name_mode))
     models.append(new_model)  # Thêm mô hình mới vào danh sách

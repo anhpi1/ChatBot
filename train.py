@@ -9,6 +9,7 @@ number_of_outputs= 0
 file_word_list=''
 num_words_list= 0
 file_input_train=''
+number_of_model = 0
 
 # tải tham số
 with open("parameter.ta", "r") as file:
@@ -34,6 +35,10 @@ for line in lines:
         if value.isdigit():
             value = int(value)
         num_words_list = value
+    if key == "number_of_model":
+        if value.isdigit():
+            value = int(value)
+        number_of_model = value
     if key == "file_word_list":
         file_word_list = value.strip("'")
     if key == "file_input_train":
@@ -48,7 +53,7 @@ tokenizer = Tokenizer(num_words=num_words_list, oov_token="<OOV>")
 tokenizer.word_index = word_index
 
 
-for i in range(1,7):
+for i in range(1,number_of_model+1):
     name_mode=i
     file_output_train='data_train/output_train/o{}.ta'.format(name_mode)
     TNN.train_TNN(name_mode ,number_of_input, file_word_list, num_words_list, file_input_train, file_output_train, number_of_outputs)
