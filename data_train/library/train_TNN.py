@@ -40,6 +40,13 @@ def create_model(number_of_outputs, number_of_input, num_words_list):
 
 def train_TNN(name_mode, number_of_input, file_word_list, num_words_list, file_input_train, file_output_train, number_of_outputs):
 
+    tf.keras.backend.clear_session()
+
+    # Xóa thư mục cache nếu có (thay 'cache_directory' bằng tên thư mục cache)
+    cache_dir = 'data_train/library/__pycache__'
+    if os.path.exists(cache_dir):
+        shutil.rmtree(cache_dir)
+
     with open(file_word_list, 'r') as json_file:
         word_index = json.load(json_file)
 
@@ -78,12 +85,10 @@ def train_TNN(name_mode, number_of_input, file_word_list, num_words_list, file_i
 
     # Lưu trọng số và bias
     model.save_weights('data_train/weight_model/model_{}.weights.h5'.format(name_mode))
-
-    del model
-    # Xóa bộ nhớ cache TensorFlow và giải phóng bộ nhớ
-    tf.keras.backend.clear_session()
-
-    # Xóa thư mục cache nếu có (thay 'cache_directory' bằng tên thư mục cache)
+    
     cache_dir = 'data_train/library/__pycache__'
     if os.path.exists(cache_dir):
         shutil.rmtree(cache_dir)
+    del model
+    # Xóa bộ nhớ cache TensorFlow và giải phóng bộ nhớ
+
