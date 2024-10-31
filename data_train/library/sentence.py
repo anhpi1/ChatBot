@@ -1,6 +1,4 @@
-
 from tensorflow.keras.preprocessing.text import Tokenizer
-import tensorflow as tf
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import numpy as np
@@ -11,7 +9,11 @@ import copy
 
 def sentencess(input_sentence, dst):
     #print(dst)
+
+    #tạo bản lưu trữ dữ liệu ban đầu
     dst_temp = copy.deepcopy(dst)
+
+    # khởi tạo tham số
     number_of_input = 0
     file_word_list = ''
     num_words_list = 0
@@ -54,6 +56,7 @@ def sentencess(input_sentence, dst):
             number_of_model = value
         if key == "file_word_list":
             file_word_list = value.strip("'")
+
     # Tải word-list
     with open(file_word_list, 'r') as json_file:
         word_index = json.load(json_file)
@@ -90,6 +93,7 @@ def sentencess(input_sentence, dst):
         predicted_class = np.argmax(predictions, axis=1)  # Lấy chỉ số của lớp có xác suất cao nhất
         Bt.append(predicted_class[0]) 
     
+    # ghi tham số mới vào dst
     dst.update(Bt=Bt, Ut=Ut, DST_history=dst_temp)
     return dst
 

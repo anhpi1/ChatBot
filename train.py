@@ -1,5 +1,4 @@
 from tensorflow.keras.preprocessing.text import Tokenizer
-from tensorflow.keras.preprocessing.sequence import pad_sequences
 import json
 import data_train.library.train_TNN as TNN
 
@@ -52,7 +51,7 @@ with open(file_word_list, 'r') as json_file:
 tokenizer = Tokenizer(num_words=num_words_list, oov_token="<OOV>")
 tokenizer.word_index = word_index
 
-
+# đào tạo model
 for i in range(1,number_of_model+1):
     name_mode=i
     file_output_train='data_train/output_train/o{}.ta'.format(name_mode)
