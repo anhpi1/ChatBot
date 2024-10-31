@@ -1,14 +1,16 @@
+import numpy as np
+
 class DST_block:
-    def __init__(self, Ut=None, Bt=None, At=0, Dt=None, DST_history=None):
-        self.Ut = Ut if Ut is not None else []
-        self.Bt = Bt if Bt is not None else []
-        self.At = At
-        self.Dt = Dt if Dt is not None else []
-        self.DST_history = DST_history if DST_history is not None else []
+    def __init__(self):
+        self.Ut = np.array([])  # Khởi tạo Ut là mảng NumPy rỗng
+        self.Bt = []
+        self.At = 0
+        self.Dt = []
+        self.DST_history = None
 
     def update(self, *, Ut=None, Bt=None, At=None, Dt=None, DST_history=None):
-        if Ut is not None:
-            self.Ut = Ut
+        if Ut is not None and len(Ut) > 0:
+            self.Ut = np.array(Ut)  # Chuyển đổi Ut thành mảng NumPy
         if Bt is not None:
             self.Bt = Bt
         if At is not None:
@@ -17,9 +19,9 @@ class DST_block:
             self.Dt = Dt
         if DST_history is not None:
             self.DST_history = DST_history
-    
+
     def __str__(self): 
-        return (f"Ut: {self.Ut}, "
+        return (f"Ut: {np.array_str(self.Ut)}, "
                 f"Bt: {self.Bt}, "
                 f"At: {self.At}, "
                 f"Dt: {self.Dt}, "

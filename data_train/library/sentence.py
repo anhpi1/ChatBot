@@ -7,9 +7,11 @@ import numpy as np
 import json
 import data_train.library.train_TNN as TNN
 import data_train.library.module_DST as DST
+import copy
 
-def sentencess(input_sentence,dst):
-    print(1)
+def sentencess(input_sentence, dst):
+    #print(dst)
+    dst_temp = copy.deepcopy(dst)
     number_of_input = 0
     file_word_list = ''
     num_words_list = 0
@@ -66,9 +68,10 @@ def sentencess(input_sentence,dst):
         new_model = TNN.create_model(number_of_outputs, number_of_input, num_words_list)
         new_model.load_weights('data_train/weight_model/model_{}.weights.h5'.format(name_mode))
         models.append(new_model)  # Thêm mô hình mới vào danh sách
+    
+    
+    
 
-
-    dst_temp=dst
     # Mã hóa câu
     sequence = tokenizer.texts_to_sequences([input_sentence])
     padded_sequence = pad_sequences(sequence, maxlen=number_of_input)
@@ -87,9 +90,7 @@ def sentencess(input_sentence,dst):
         predicted_class = np.argmax(predictions, axis=1)  # Lấy chỉ số của lớp có xác suất cao nhất
         Bt.append(predicted_class[0]) 
     
-    dst.update(Bt=Bt)
-    dst.update(Ut=Ut)
-    dst.update(DST_history = dst_temp)
+    dst.update(Bt=Bt, Ut=Ut, DST_history=dst_temp)
     return dst
 
     
