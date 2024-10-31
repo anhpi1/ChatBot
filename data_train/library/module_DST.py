@@ -25,21 +25,21 @@ class DST_block:
                 f"Dt: {self.Dt}, "
                 f"DST_history: {self.DST_history}")
 
-# Khởi tạo đối tượng DST_block
-dst = DST_block()
-dst1 = DST_block()
+# # Khởi tạo đối tượng DST_block
+# dst = DST_block()
+# dst1 = DST_block()
 
-# Cập nhật giá trị At với từ khóa
-dst.update(At=3)
+# # Cập nhật giá trị At với từ khóa
+# dst.update(At=3)
 
-# Cập nhật giá trị Bt với từ khóa
-dst.update(Bt=[1, 2, 3, 4])
-# Cập nhật giá trị At với từ khóa
-dst1.update(At=4)
+# # Cập nhật giá trị Bt với từ khóa
+# dst.update(Bt=[1, 2, 3, 4])
+# # Cập nhật giá trị At với từ khóa
+# dst1.update(At=4)
 
-# Cập nhật giá trị Bt với từ khóa
-dst1.update(Bt=[5, 6, 7, 8])
+# # Cập nhật giá trị Bt với từ khóa
+# dst1.update(Bt=[5, 6, 7, 8])
 
-dst.update(DST_history=dst1)
+# dst.update(DST_history=dst1)
 
-print(dst)
+# print(dst)
