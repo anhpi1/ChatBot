@@ -6,7 +6,7 @@ dst2 = DST.DST_block()
 dst3 = DST.DST_block()
 
 # Câu cần dự đoán
-input1 = "What is the dominant pole of a Miller compensated two stage comparator?"
+input1 = "What is comparator?"
 input2 = "What is the second dominant pole in 2 satge?"
 input3 = "What is the third dominant pole in 2 satge comparator?"
 
