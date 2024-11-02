@@ -29,7 +29,7 @@ def read_sentences_from_file(file_path):
 
 # dữ liệu đầu vào
 x = read_sentences_from_file('data_train/input_train/content_question.ta')
-print(x)
+
 # tạo word list
 tokenizer = Tokenizer(num_words=num_words_list, oov_token="<OOV>")
 tokenizer.fit_on_texts(x)
