@@ -6,9 +6,9 @@ dst2 = DST.DST_block()
 dst3 = DST.DST_block()
 
 # Câu cần dự đoán
-input1 = "Why would you use two stages instead of only one in 2 stage comparator?"
-input2 = "In DC normal operation, What is the input resistance of 2 stage ?"
-input3 = "What is the Miller compensation?"
+input1 = "What is the dominant pole of a Miller compensated two stage comparator?"
+input2 = "What is the second dominant pole in 2 satge?"
+input3 = "What is the third dominant pole in 2 satge comparator?"
 
 
 dst1 = ST.sentencess(input1,dst1)

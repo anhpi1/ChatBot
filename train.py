@@ -26,10 +26,6 @@ for line in lines:
         if value.isdigit():
             value = int(value)
         number_of_input = value
-    if key == "number_of_outputs":
-        if value.isdigit():
-            value = int(value)
-        number_of_outputs = value
     if key == "num_words_list":
         if value.isdigit():
             value = int(value)
@@ -55,4 +51,10 @@ tokenizer.word_index = word_index
 for i in range(1,number_of_model+1):
     name_mode=i
     file_output_train='data_train/output_train/o{}.ta'.format(name_mode)
+    # Đọc dữ liệu từ tệp
+    with open(file_output_train, "r") as file:
+        numbers = file.readlines()
+    # Chuyển các dòng từ chuỗi thành số nguyên và tìm số lớn nhất
+    number_of_outputs = max(int(number.strip()) for number in numbers) + 1
+
     TNN.train_TNN(name_mode ,number_of_input, file_word_list, num_words_list, file_input_train, file_output_train, number_of_outputs)

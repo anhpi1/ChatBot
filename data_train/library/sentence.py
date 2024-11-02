@@ -42,10 +42,6 @@ def sentencess(input_sentence, dst):
             if value.isdigit():
                 value = int(value)
             number_of_input = value
-        if key == "number_of_outputs":
-            if value.isdigit():
-                value = int(value)
-            number_of_outputs = value
         if key == "num_words_list":
             if value.isdigit():
                 value = int(value)
@@ -68,6 +64,12 @@ def sentencess(input_sentence, dst):
 
     # Tạo và tải các mô hình từ các trọng số
     for name_mode in range(1, number_of_model+1):
+            # Đọc dữ liệu từ tệp
+        file_output_train='data_train/output_train/o{}.ta'.format(name_mode)
+        with open(file_output_train, "r") as file:
+            numbers = file.readlines()
+        # Chuyển các dòng từ chuỗi thành số nguyên và tìm số lớn nhất
+        number_of_outputs = max(int(number.strip()) for number in numbers) +1 
         new_model = TNN.create_model(number_of_outputs, number_of_input, num_words_list)
         new_model.load_weights('data_train/weight_model/model_{}.weights.h5'.format(name_mode))
         models.append(new_model)  # Thêm mô hình mới vào danh sách

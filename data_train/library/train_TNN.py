@@ -74,14 +74,26 @@ def train_TNN(name_mode, number_of_input, file_word_list, num_words_list, file_i
     model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
     # Điều kiện dừng huấn luyện
-    early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_accuracy', patience=20, restore_best_weights=True)
+    early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
 
     # Huấn luyện mô hình
-    model.fit(input_train, output_train, epochs=6000, batch_size=8, validation_data=(input_test, output_test), callbacks=[early_stopping],verbose=0)
+    model.fit(input_train, output_train, epochs=6000, batch_size=2, validation_data=(input_test, output_test), callbacks=[early_stopping],verbose=0)
 
     # Đánh giá mô hình
-    loss, accuracy = model.evaluate(input_test, output_test)
+    loss, accuracy = model.evaluate(input_test, output_test,verbose=0)
+    print(name_mode)
     print(f'Model Loss: {loss:.4f}, Model Accuracy: {accuracy:.4f}')
+    count=0
+    while accuracy < 0.9:
+        if count >10:
+            break
+        model.fit(input_train, output_train, epochs=6000, batch_size=2, validation_data=(input_test, output_test), callbacks=[early_stopping], verbose=0)
+        
+        # Đánh giá mô hình sau mỗi lần huấn luyện
+        loss, accuracy = model.evaluate(input_test, output_test, verbose=0)
+        count +=1
+        print(name_mode)
+        print(f'Model Loss: {loss:.4f}, Model Accuracy: {accuracy:.4f}')
 
     # Lưu trọng số và bias
     model.save_weights('data_train/weight_model/model_{}.weights.h5'.format(name_mode))

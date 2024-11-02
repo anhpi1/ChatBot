@@ -1,5 +1,5 @@
 number_of_input = 16
-number_of_outputs = 26
+
 file_word_list = 'data_train/word_list.json'
 num_words_list = 10000
 file_input_train = 'data_train/input_train/content_question.ta'
