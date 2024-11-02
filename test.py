@@ -9,12 +9,12 @@ input2 = "Kangaroos are known for their powerful hind legs."
 input3 = "Birds are known for their colorful feathers."
 
 dst = ST.sentencess(input1,dst)
-
+print("user 1:{}".format(dst))
 dst = ST.sentencess(input2,dst)
-
+print("user 2:{}".format(dst))
 dst = ST.sentencess(input3,dst)
 
-print(dst)
+print("user 3:{}".format(dst))
 
 
 
