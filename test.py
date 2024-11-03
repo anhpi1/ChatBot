@@ -12,7 +12,7 @@ input3 = "What is the third dominant pole in 2 satge comparator?"
 
 
 dst1 = ST.sentencess(input1,dst1)
-print("user 1:{}".format(dst1.Bt))
+print(":{}".format(dst1.Bt))
 dst2 = ST.sentencess(input2,dst2)
 print("user 2:{}".format(dst2.Bt))
 dst3 = ST.sentencess(input3,dst3)
