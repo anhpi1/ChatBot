@@ -27,8 +27,6 @@ print("user 3:{}".format(dst3.Bt))
 # [Miller compensation components]
 # [NULL]
 
-8*20 
-
 # [what]
 # [NULL]
 # [Input stager]
