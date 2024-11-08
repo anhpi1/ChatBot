@@ -21,7 +21,8 @@ def sentencess(input_sentence, dst):
     Bt = []
     Ut = []
     dst = DST.DST_block()
-
+    output_train = ''
+    weight_model = ''
     # Tải tham số
     with open("parameter.ta", "r") as file:
         lines = file.readlines()
@@ -41,6 +42,10 @@ def sentencess(input_sentence, dst):
             number_of_model = int(value)
         elif key == "file_word_list":
             file_word_list = value.strip("'")
+        elif key == "output_train":
+            output_train = value.strip("'")
+        elif key == "weight_model":
+            weight_model = value.strip("'")
 
     # Tải word index
     try:
@@ -60,7 +65,7 @@ def sentencess(input_sentence, dst):
 
         # Tải các mô hình với trọng số tương ứng
         for i in range(0,number_of_copies_model):
-            file_output_train = f'data_train/output_train/o{name_mode}.ta'
+            file_output_train = output_train.format(name_mode)
             try:
                 with open(file_output_train, "r") as file:
                     numbers = file.readlines()
@@ -70,7 +75,7 @@ def sentencess(input_sentence, dst):
                 continue
 
             new_model = TNN.create_model(number_of_outputs, number_of_input, num_words_list)
-            new_model.load_weights(f'data_train/weight_model/model_{name_mode}{i}.weights.h5')
+            new_model.load_weights(weight_model.format(name_mode,i))
             models.append(new_model)
 
         # Mã hóa và padding câu
@@ -91,7 +96,7 @@ def sentencess(input_sentence, dst):
         for i, prediction in enumerate(temp):
             if prediction != most_frequent:
                 TNN.update_weights_on_incorrect_prediction(models[i], Ut, most_frequent)
-                models[i].save_weights(f'data_train/weight_model/model_{name_mode}{i}.weights.h5')
+                models[i].save_weights(weight_model.format(name_mode,i))
 
         del models  # Xóa các mô hình khỏi bộ nhớ sau khi sử dụng
 

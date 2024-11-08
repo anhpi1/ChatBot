@@ -9,6 +9,7 @@ file_word_list=''
 num_words_list= 0
 file_input_train=''
 number_of_model = 0
+output_train = ''
 
 # tải tham số
 with open("parameter.ta", "r") as file:
@@ -42,6 +43,8 @@ for line in lines:
         file_word_list = value.strip("'")
     if key == "file_input_train":
         file_input_train = value.strip("'")
+    if key == "output_train":
+        output_train = value.strip("'")
 
 
 # tải word-list
@@ -54,7 +57,7 @@ tokenizer.word_index = word_index
 # đào tạo model
 for name_mode in range(0,number_of_model):
     
-    file_output_train='data_train/output_train/o{}.ta'.format(name_mode)
+    file_output_train=output_train.format(name_mode)
     # Đọc dữ liệu từ tệp
     with open(file_output_train, "r") as file:
         numbers = file.readlines()

@@ -1,13 +1,46 @@
 import pyodbc
 import numpy as np
+import ast
 def print_Bt(bt):
-    Bt=[int(i) for i in bt]
-    topics = ['topology', 'structure', 'performance_metric', 'applications', 'components', 'tools']
+
+    # Thông tin kết nối SQL Server
+    server = ''
+    database = ''
+    username = ''
+    password = ''
+    topics =[]
     content = []
-    server = 'DESKTOP-1MU0IU3\\SQLEXPRESS'
-    database = 'comparator'
-    username = ''  # Add username if required
-    password = ''  # Add password if required
+    # tải tham số
+    with open("parameter.ta", "r") as file:
+        lines = file.readlines()
+    for line in lines:
+        # Bỏ qua các dòng trống
+        if not line.strip():
+            continue
+        # Tách dòng thành key và value
+        key, value = line.split(" = ")
+        key = key.strip()
+        value = value.strip()
+        if key == "server":
+            server = value.strip("'")
+        if key == "database":
+            database = value.strip("'")
+        if key == "username":
+            username = value.strip("'")
+        if key == "file_input_train":
+            password = value.strip("'")
+        if key == "topics":
+            topics = value
+        if line.strip().startswith("topics = "):
+            # Trích xuất chuỗi sau 'topics = '
+            topics_str = line.strip()[len("topics = "):].strip()
+            
+            # Dùng ast.literal_eval để chuyển chuỗi thành danh sách Python
+            topics = ast.literal_eval(topics_str)
+
+    Bt=[int(i) for i in bt]
+    
+    content = []
 
     # Connect to SQL Server
     conn = pyodbc.connect(

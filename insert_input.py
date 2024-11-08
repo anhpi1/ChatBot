@@ -1,10 +1,36 @@
 import pyodbc
 
 # Thông tin kết nối SQL Server
-server = 'DESKTOP-1MU0IU3\SQLEXPRESS'
-database = 'comparator'
+server = ''
+database = ''
 username = ''
 password = ''
+content_question = ''
+command_sever_get_input = ''
+
+# tải tham số
+with open("parameter.ta", "r") as file:
+    lines = file.readlines()
+for line in lines:
+    # Bỏ qua các dòng trống
+    if not line.strip():
+        continue
+    # Tách dòng thành key và value
+    key, value = line.split(" = ")
+    key = key.strip()
+    value = value.strip()
+    if key == "server":
+        server = value.strip("'")
+    if key == "database":
+        database = value.strip("'")
+    if key == "username":
+        username = value.strip("'")
+    if key == "file_input_train":
+        password = value.strip("'")
+    if key == "content_question":
+        content_question = value.strip("'")
+    if key == "command_sever_get_input":
+        command_sever_get_input = value.strip("'")
 
 # Kết nối đến SQL Server
 conn = pyodbc.connect(
@@ -16,11 +42,11 @@ cursor = conn.cursor()
 
 
 # Thực thi truy vấn để lấy dữ liệu
-cursor.execute("SELECT content FROM dbo.question;")
+cursor.execute(command_sever_get_input)
 rows = cursor.fetchall()
 
-# Ghi dữ liệu vào file x.txt
-with open("data_train\input_train\content_question.ta", "w", encoding="utf-8") as file:
+# Ghi dữ liệu vào file content_question.txt
+with open(content_question, "w", encoding="utf-8") as file:
     for row in rows:
         file.write(f"{row.content}\n")
 

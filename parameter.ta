@@ -1,6 +1,24 @@
 number_of_input = 16
+number_of_model = 6
 number_of_copies_model = 5
+weight_model = 'data_train/weight_model/model_{}{}.weights.h5'
+
 file_word_list = 'data_train/word_list.json'
 num_words_list = 10000
+
+topics = ['topology', 'structure', 'performance_metric', 'applications', 'components', 'tools']
 file_input_train = 'data_train/input_train/content_question.ta'
-number_of_model = 6
+output_train = 'data_train\output_train\o{}.ta'
+
+server = 'DESKTOP-1MU0IU3\SQLEXPRESS'
+database = 'comparator'
+username = ''
+password = ''
+content_question = 'data_train\input_train\content_question.ta'
+command_sever_get_input = 'SELECT content FROM dbo.question;'
+command_sever_get_output = 'SELECT {} FROM dbo.question;'
+command_sever_get_output_train = 'SELECT {}_id FROM dbo.question;'
+
+
+
+

@@ -1,30 +1,66 @@
 import pyodbc
-
+import ast
 # Thông tin kết nối SQL Server
-server = 'DESKTOP-1MU0IU3\SQLEXPRESS'
-database = 'comparator'
+server = ''
+database = ''
 username = ''
 password = ''
+output_train = ''
+command_sever_get_output_train = ''
+command_connect_sever = ''
+topics = []
 
-# Tên cột được lưu trong biến
-name=['topology_id','structure_id','performance_metric_id','applications_id','components_id','tools_id']
+# tải tham số
+with open("parameter.ta", "r") as file:
+    lines = file.readlines()
+for line in lines:
+    # Bỏ qua các dòng trống
+    if not line.strip():
+        continue
+    # Tách dòng thành key và value
+    key, value = line.split(" = ")
+    key = key.strip()
+    value = value.strip()
+    if key == "server":
+        server = value.strip("'")
+    if key == "database":
+        database = value.strip("'")
+    if key == "username":
+        username = value.strip("'")
+    if key == "password":
+        password = value.strip("'")
+    if key == "output_train":
+        output_train = value.strip("'")
+    if key == "command_sever_get_output_train":
+        command_sever_get_output_train = value.strip("'")
+    if key == "command_connect_sever":
+        command_connect_sever = value.strip("'")
+    if line.strip().startswith("topics = "):
+        # Trích xuất chuỗi sau 'topics = '
+        topics_str = line.strip()[len("topics = "):].strip()
+            
+        # Dùng ast.literal_eval để chuyển chuỗi thành danh sách Python
+        topics = ast.literal_eval(topics_str)
+
+
 
 # Kết nối đến SQL Server
-conn = pyodbc.connect(
-    f'DRIVER={{SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}'
+conn = pyodbc.connect(command_connect_sever.format(server,database,username,password)
+    
 )
+
 
 # Tạo một đối tượng cursor
 cursor = conn.cursor()
 
 for i in range(0,6):
     # Thực thi truy vấn với tên cột từ biến
-    query = f"SELECT {name[i]} FROM dbo.question;"
+    query = command_sever_get_output_train.format(topics[i])
     cursor.execute(query)
     rows = cursor.fetchall()
 
-    # Ghi dữ liệu vào file x.txt
-    with open("data_train\output_train\o{}.ta".format(i), "w", encoding="utf-8") as file:
+    # Ghi dữ liệu vào file output_train
+    with open(output_train.format(i), "w", encoding="utf-8") as file:
         for row in rows:
             # Thay None thành 0 trong mỗi dòng
             row_data = [0 if item is None else item for item in row]
