@@ -45,9 +45,9 @@ for line in lines:
 
 
 # Kết nối đến SQL Server
-conn = pyodbc.connect(command_connect_sever.format(server,database,username,password)
-    
+conn = pyodbc.connect(command_connect_sever.format(server,database,username,password)    
 )
+
 
 
 # Tạo một đối tượng cursor
