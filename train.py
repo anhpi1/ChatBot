@@ -2,7 +2,7 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 import json
 import data_train.library.train_TNN as TNN
 
-
+number_of_copies_model=0
 number_of_input = 0
 number_of_outputs= 0
 file_word_list=''
@@ -34,6 +34,10 @@ for line in lines:
         if value.isdigit():
             value = int(value)
         number_of_model = value
+    if key == "number_of_copies_model":
+        if value.isdigit():
+            value = int(value)
+        number_of_copies_model = value
     if key == "file_word_list":
         file_word_list = value.strip("'")
     if key == "file_input_train":
@@ -48,8 +52,8 @@ tokenizer = Tokenizer(num_words=num_words_list, oov_token="<OOV>")
 tokenizer.word_index = word_index
 
 # đào tạo model
-for i in range(1,number_of_model+1):
-    name_mode=i
+for name_mode in range(0,number_of_model):
+    
     file_output_train='data_train/output_train/o{}.ta'.format(name_mode)
     # Đọc dữ liệu từ tệp
     with open(file_output_train, "r") as file:
@@ -57,4 +61,4 @@ for i in range(1,number_of_model+1):
     # Chuyển các dòng từ chuỗi thành số nguyên và tìm số lớn nhất
     number_of_outputs = max(int(number.strip()) for number in numbers) + 1
 
-    TNN.train_TNN(name_mode ,number_of_input, file_word_list, num_words_list, file_input_train, file_output_train, number_of_outputs)
+    TNN.train_TNN(name_mode ,number_of_input, file_word_list, num_words_list, file_input_train, file_output_train, number_of_outputs,number_of_copies_model)

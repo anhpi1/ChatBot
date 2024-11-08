@@ -1,6 +1,6 @@
 from tensorflow.keras.preprocessing.text import Tokenizer
-from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+import tensorflow as tf
 import numpy as np
 import json
 import data_train.library.train_TNN as TNN
@@ -8,107 +8,93 @@ import data_train.library.module_DST as DST
 import copy
 
 def sentencess(input_sentence, dst):
-    #print(dst)
-
-    #tạo bản lưu trữ dữ liệu ban đầu
+    # Tạo bản sao lưu của DST ban đầu
     dst_temp = copy.deepcopy(dst)
 
-    # khởi tạo tham số
+    # Khởi tạo tham số
     number_of_input = 0
     file_word_list = ''
     num_words_list = 0
     number_of_outputs = 0
     number_of_model = 0
-
-    Bt=[]
-    Ut=[]
-    At=0
-    Dt=None
+    number_of_copies_model = 0
+    Bt = []
+    Ut = []
     dst = DST.DST_block()
 
-    # tải tham số
+    # Tải tham số
     with open("parameter.ta", "r") as file:
         lines = file.readlines()
     for line in lines:
-        # Bỏ qua các dòng trống
+        # Bỏ qua dòng trống
         if not line.strip():
             continue
-        # Tách dòng thành key và value
         key, value = line.split(" = ")
-        key = key.strip()
-        value = value.strip()
-        # Kiểm tra nếu value là số nguyên trước khi chuyển đổi
-        if key == "number_of_input":
-            if value.isdigit():
-                value = int(value)
-            number_of_input = value
-        if key == "num_words_list":
-            if value.isdigit():
-                value = int(value)
-            num_words_list = value
-        if key == "number_of_model":
-            if value.isdigit():
-                value = int(value)
-            number_of_model = value
-        if key == "file_word_list":
+        key, value = key.strip(), value.strip()
+        if key == "number_of_input" and value.isdigit():
+            number_of_input = int(value)
+        elif key == "num_words_list" and value.isdigit():
+            num_words_list = int(value)
+        elif key == "number_of_copies_model" and value.isdigit():
+            number_of_copies_model = int(value)
+        elif key == "number_of_model" and value.isdigit():
+            number_of_model = int(value)
+        elif key == "file_word_list":
             file_word_list = value.strip("'")
 
-    # Tải word-list
-    with open(file_word_list, 'r') as json_file:
-        word_index = json.load(json_file)
+    # Tải word index
+    try:
+        with open(file_word_list, 'r') as json_file:
+            word_index = json.load(json_file)
+    except FileNotFoundError:
+        print(f"Không tìm thấy tệp danh sách từ {file_word_list}.")
+        return None
 
     tokenizer = Tokenizer(num_words=num_words_list, oov_token="<OOV>")
     tokenizer.word_index = word_index
 
-    models = []
+    # Xử lý từng mô hình
+    for name_mode in range(number_of_model):
+        models = []
+        temp = []
 
-    # Tạo và tải các mô hình từ các trọng số
-    for name_mode in range(1, number_of_model+1):
-            # Đọc dữ liệu từ tệp
-        file_output_train='data_train/output_train/o{}.ta'.format(name_mode)
-        with open(file_output_train, "r") as file:
-            numbers = file.readlines()
-        # Chuyển các dòng từ chuỗi thành số nguyên và tìm số lớn nhất
-        number_of_outputs = max(int(number.strip()) for number in numbers) +1 
-        new_model = TNN.create_model(number_of_outputs, number_of_input, num_words_list)
-        new_model.load_weights('data_train/weight_model/model_{}.weights.h5'.format(name_mode))
-        models.append(new_model)  # Thêm mô hình mới vào danh sách
-    
-    
-    
+        # Tải các mô hình với trọng số tương ứng
+        for i in range(0,number_of_copies_model):
+            file_output_train = f'data_train/output_train/o{name_mode}.ta'
+            try:
+                with open(file_output_train, "r") as file:
+                    numbers = file.readlines()
+                number_of_outputs = max(int(number.strip()) for number in numbers) + 1
+            except FileNotFoundError:
+                print(f"Không tìm thấy tệp đầu ra train {file_output_train}.")
+                continue
 
-    # Mã hóa câu
-    sequence = tokenizer.texts_to_sequences([input_sentence])
-    padded_sequence = pad_sequences(sequence, maxlen=number_of_input)
+            new_model = TNN.create_model(number_of_outputs, number_of_input, num_words_list)
+            new_model.load_weights(f'data_train/weight_model/model_{name_mode}{i}.weights.h5')
+            models.append(new_model)
 
-    # Chuyển đổi padded_sequence thành numpy array để dự đoán
-    padded_sequence = np.array(padded_sequence)
-    Ut=padded_sequence
+        # Mã hóa và padding câu
+        sequence = tokenizer.texts_to_sequences([input_sentence])
+        padded_sequence = pad_sequences(sequence, maxlen=number_of_input)
+        Ut = np.array(padded_sequence)
 
+        # Dự đoán và cập nhật trọng số
+        for model in models:
+            predictions = model.predict(Ut, verbose=0)
+            predicted_class = np.argmax(predictions, axis=1)[0]
+            temp.append(predicted_class)
 
-    # Dự đoán cho từng mô hình
-    for index, model in enumerate(models):
-        # Dự đoán
-        predictions = model.predict(padded_sequence, verbose=0)  # Tắt chế độ verbose
+        values, counts = np.unique(temp, return_counts=True)
+        most_frequent = values[np.argmax(counts)]
+        Bt.append(most_frequent)
 
-        # In kết quả dự đoán
-        predicted_class = np.argmax(predictions, axis=1)  # Lấy chỉ số của lớp có xác suất cao nhất
-        Bt.append(predicted_class[0]) 
-    
-    # ghi tham số mới vào dst
+        for i, prediction in enumerate(temp):
+            if prediction != most_frequent:
+                TNN.update_weights_on_incorrect_prediction(models[i], Ut, most_frequent)
+                models[i].save_weights(f'data_train/weight_model/model_{name_mode}{i}.weights.h5')
+
+        del models  # Xóa các mô hình khỏi bộ nhớ sau khi sử dụng
+
+    # Cập nhật DST
     dst.update(Bt=Bt, Ut=Ut, DST_history=dst_temp)
     return dst
-
-    
-    
-    
-    
-    
-    
-    
-
-
-
-
-
-

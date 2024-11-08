@@ -24,7 +24,7 @@ for i in range(0,6):
     rows = cursor.fetchall()
 
     # Ghi dữ liệu vào file x.txt
-    with open("data_train\output_train\o{}.ta".format(i+1), "w", encoding="utf-8") as file:
+    with open("data_train\output_train\o{}.ta".format(i), "w", encoding="utf-8") as file:
         for row in rows:
             # Thay None thành 0 trong mỗi dòng
             row_data = [0 if item is None else item for item in row]

@@ -38,7 +38,7 @@ def create_model(number_of_outputs, number_of_input, num_words_list):
     output_layer = Dense(number_of_outputs, activation='softmax')(x)
     return Model(inputs=input_layer, outputs=output_layer)
 
-def train_TNN(name_mode, number_of_input, file_word_list, num_words_list, file_input_train, file_output_train, number_of_outputs):
+def train_TNN(name_mode, number_of_input, file_word_list, num_words_list, file_input_train, file_output_train, number_of_outputs,number_of_copies_model):
 
     tf.keras.backend.clear_session()
 
@@ -60,44 +60,104 @@ def train_TNN(name_mode, number_of_input, file_word_list, num_words_list, file_i
     # Mã hóa các câu
     input_sequences = tokenizer.texts_to_sequences(input)
     input_padded = pad_sequences(input_sequences, maxlen=number_of_input)
+    for i in range(0,number_of_copies_model):
+        # Chia dữ liệu thành tập huấn luyện và kiểm tra
+        input_train, input_test, output_train, output_test = train_test_split(input_padded, output, test_size=0.1)
 
-    # Chia dữ liệu thành tập huấn luyện và kiểm tra
-    input_train, input_test, output_train, output_test = train_test_split(input_padded, output, test_size=0.1)
+        # Chuyển đổi output thành array (nếu cần mã hóa nhãn số nguyên)
+        output_train = np.array(output_train, dtype=np.int32)
+        output_test = np.array(output_test, dtype=np.int32)
 
-    # Chuyển đổi output thành array (nếu cần mã hóa nhãn số nguyên)
-    output_train = np.array(output_train, dtype=np.int32)
-    output_test = np.array(output_test, dtype=np.int32)
+        model = create_model(number_of_outputs, number_of_input, num_words_list)
 
-    model = create_model(number_of_outputs, number_of_input, num_words_list)
+        # Biên dịch mô hình
+        model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-    # Biên dịch mô hình
-    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+        # Điều kiện dừng huấn luyện
+        early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
 
-    # Điều kiện dừng huấn luyện
-    early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
+        # Huấn luyện mô hình
+        model.fit(input_train, output_train, epochs=6000, batch_size=2, validation_data=(input_test, output_test), callbacks=[early_stopping],verbose=0)
 
-    # Huấn luyện mô hình
-    model.fit(input_train, output_train, epochs=6000, batch_size=2, validation_data=(input_test, output_test), callbacks=[early_stopping],verbose=0)
-
-    # Đánh giá mô hình
-    loss, accuracy = model.evaluate(input_test, output_test,verbose=0)
-    print(name_mode)
-    print(f'Model Loss: {loss:.4f}, Model Accuracy: {accuracy:.4f}')
-    count=0
-    while accuracy < 0.9:
-        if count >10:
-            break
-        model.fit(input_train, output_train, epochs=6000, batch_size=2, validation_data=(input_test, output_test), callbacks=[early_stopping], verbose=0)
-        
-        # Đánh giá mô hình sau mỗi lần huấn luyện
-        loss, accuracy = model.evaluate(input_test, output_test, verbose=0)
-        count +=1
+        # Đánh giá mô hình
+        loss, accuracy = model.evaluate(input_test, output_test,verbose=0)
         print(name_mode)
         print(f'Model Loss: {loss:.4f}, Model Accuracy: {accuracy:.4f}')
-
-    # Lưu trọng số và bias
-    model.save_weights('data_train/weight_model/model_{}.weights.h5'.format(name_mode))
+        
+        # Lưu trọng số và bias
+        model.save_weights('data_train/weight_model/model_{}{}.weights.h5'.format(name_mode,i))
 
     del model
     # Xóa bộ nhớ cache TensorFlow và giải phóng bộ nhớ
 
+def update_weights_on_incorrect_prediction(model, incorrect_sentence_padded, correct_label):
+    optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
+    loss_fn = tf.keras.losses.SparseCategoricalCrossentropy()
+
+    correct_label = np.array([correct_label])
+    while True:
+        with tf.GradientTape() as tape:
+            logits = model(incorrect_sentence_padded, training=True)
+            loss_value = loss_fn(correct_label, logits)
+        
+        grads = tape.gradient(loss_value, model.trainable_weights)
+        optimizer.apply_gradients(zip(grads, model.trainable_weights))
+
+        if loss_value < 0.0001:
+            break
+
+    print(f"Trọng số đã được cập nhật với loss: {loss_value.numpy():.4f}")
+
+def update_weights_models(name_models , input, correct_label):
+    # Khởi tạo tham số
+    number_of_input = 0
+    file_word_list = ''
+    num_words_list = 0
+    number_of_outputs = 0
+    number_of_copies_model = 0
+
+    # Tải tham số
+    with open("parameter.ta", "r") as file:
+        lines = file.readlines()
+    for line in lines:
+        # Bỏ qua dòng trống
+        if not line.strip():
+            continue
+        key, value = line.split(" = ")
+        key, value = key.strip(), value.strip()
+        if key == "number_of_input" and value.isdigit():
+            number_of_input = int(value)
+        elif key == "num_words_list" and value.isdigit():
+            num_words_list = int(value)
+        elif key == "number_of_copies_model" and value.isdigit():
+            number_of_copies_model = int(value)
+        elif key == "file_word_list":
+            file_word_list = value.strip("'")
+
+    # Tải word index
+    try:
+        with open(file_word_list, 'r') as json_file:
+            word_index = json.load(json_file)
+    except FileNotFoundError:
+        print(f"Không tìm thấy tệp danh sách từ {file_word_list}.")
+        return None
+    tokenizer = Tokenizer(num_words=num_words_list, oov_token="<OOV>")
+    tokenizer.word_index = word_index
+    input_sequences = tokenizer.texts_to_sequences(input)
+    incorrect_sentence_padded = pad_sequences(input_sequences, maxlen=number_of_input) 
+
+    # Tải các mô hình với trọng số tương ứng
+    for i in range(0,number_of_copies_model):
+        file_output_train = f'data_train/output_train/o{name_models}.ta'
+        try:
+            with open(file_output_train, "r") as file:
+                numbers = file.readlines()
+            number_of_outputs = max(int(number.strip()) for number in numbers) + 1
+        except FileNotFoundError:
+            print(f"Không tìm thấy tệp đầu ra train {file_output_train}.")
+            continue
+        new_model = create_model(number_of_outputs, number_of_input, num_words_list)
+        new_model.load_weights(f'data_train/weight_model/model_{name_models}{i}.weights.h5')
+        update_weights_on_incorrect_prediction(new_model, incorrect_sentence_padded, correct_label)
+    
+        
