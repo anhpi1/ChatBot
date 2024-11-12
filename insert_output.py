@@ -9,6 +9,7 @@ output_train = ''
 command_sever_get_output_train = ''
 command_connect_sever = ''
 topics = []
+number_of_model=0
 
 # tải tham số
 with open("parameter.ta", "r") as file:
@@ -35,6 +36,8 @@ for line in lines:
         command_sever_get_output_train = value.strip("'")
     if key == "command_connect_sever":
         command_connect_sever = value.strip("'")
+    if key == "number_of_model" and value.isdigit():
+        number_of_model = int(value)
     if line.strip().startswith("topics = "):
         # Trích xuất chuỗi sau 'topics = '
         topics_str = line.strip()[len("topics = "):].strip()
@@ -53,7 +56,7 @@ conn = pyodbc.connect(command_connect_sever.format(server,database,username,pass
 # Tạo một đối tượng cursor
 cursor = conn.cursor()
 
-for i in range(0,6):
+for i in range(0,number_of_model):
     # Thực thi truy vấn với tên cột từ biến
     query = command_sever_get_output_train.format(topics[i])
     cursor.execute(query)

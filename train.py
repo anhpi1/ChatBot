@@ -63,5 +63,6 @@ for name_mode in range(0,number_of_model):
         numbers = file.readlines()
     # Chuyển các dòng từ chuỗi thành số nguyên và tìm số lớn nhất
     number_of_outputs = max(int(number.strip()) for number in numbers) + 1
+    
 
     TNN.train_TNN(name_mode ,number_of_input, file_word_list, num_words_list, file_input_train, file_output_train, number_of_outputs,number_of_copies_model)

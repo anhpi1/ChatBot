@@ -1,4 +1,5 @@
 import tensorflow as tf
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 from tensorflow.keras.layers import Input, Dense, Embedding, MultiHeadAttention, LayerNormalization, Dropout, GlobalAveragePooling1D
 from tensorflow.keras.models import Model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -40,6 +41,7 @@ def create_model(number_of_outputs, number_of_input, num_words_list):
 
 def train_TNN(name_mode, number_of_input, file_word_list, num_words_list, file_input_train, file_output_train, number_of_outputs,number_of_copies_model):
     # Tải tham số
+    report_train = ''
     with open("parameter.ta", "r") as file:
         lines = file.readlines()
     for line in lines:
@@ -49,6 +51,8 @@ def train_TNN(name_mode, number_of_input, file_word_list, num_words_list, file_i
         key, value = key.strip(), value.strip()
         if key == "weight_model":
             weight_model = value.strip("'")
+        if key == "report_train":
+            report_train = value.strip("'")
     tf.keras.backend.clear_session()
 
     # Xóa thư mục cache nếu có (thay 'cache_directory' bằng tên thư mục cache)
@@ -69,35 +73,61 @@ def train_TNN(name_mode, number_of_input, file_word_list, num_words_list, file_i
     # Mã hóa các câu
     input_sequences = tokenizer.texts_to_sequences(input)
     input_padded = pad_sequences(input_sequences, maxlen=number_of_input)
-    for i in range(0,number_of_copies_model):
-        # Chia dữ liệu thành tập huấn luyện và kiểm tra
-        input_train, input_test, output_train, output_test = train_test_split(input_padded, output, test_size=0.1)
 
-        # Chuyển đổi output thành array (nếu cần mã hóa nhãn số nguyên)
-        output_train = np.array(output_train, dtype=np.int32)
-        output_test = np.array(output_test, dtype=np.int32)
+    with open(report_train.format(name_mode), "w", encoding="utf-8") as file:
+        for i in range(0, number_of_copies_model):
+            # Chia dữ liệu và tạo mô hình như trước
+            input_train, input_test, output_train, output_test = train_test_split(input_padded, output, test_size=0.1)
+            
+            output_train = np.array(output_train, dtype=np.int32)
+            output_test = np.array(output_test, dtype=np.int32)
+            
+            model = create_model(number_of_outputs, number_of_input, num_words_list)
+            model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-        model = create_model(number_of_outputs, number_of_input, num_words_list)
+            # Huấn luyện mô hình
+            early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
+            model.fit(input_train, output_train, epochs=6000, batch_size=2, validation_data=(input_test, output_test), callbacks=[early_stopping], verbose=0)
 
-        # Biên dịch mô hình
-        model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+            # Đánh giá mô hình trên tập kiểm tra
+            predictions = model.predict(input_test, verbose=0).argmax(axis=1)
 
-        # Điều kiện dừng huấn luyện
-        early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
+            # Tính các chỉ số đánh giá
+            accuracy = accuracy_score(output_test, predictions)
+            precision = precision_score(output_test, predictions, average='macro')
+            recall = recall_score(output_test, predictions, average='macro')
+            f1 = f1_score(output_test, predictions, average='macro')
+            conf_matrix = confusion_matrix(output_test, predictions)
 
-        # Huấn luyện mô hình
-        model.fit(input_train, output_train, epochs=6000, batch_size=2, validation_data=(input_test, output_test), callbacks=[early_stopping],verbose=0)
+            # In kết quả
+            print(f"Model: {name_mode} Copy_number: {i}")
+            print("Max_output: {}".format(number_of_outputs))
+            print(f"Accuracy: {accuracy:.4f}")
+            print(f"Precision: {precision:.4f}")
+            print(f"Recall: {recall:.4f}")
+            print(f"F1 Score: {f1:.4f}")
+            print("Confusion Matrix:\n", conf_matrix)
 
-        # Đánh giá mô hình
-        loss, accuracy = model.evaluate(input_test, output_test,verbose=0)
-        print("mode:{}{}".format(name_mode,i))
-        print(f'Model Loss: {loss:.4f}, Model Accuracy: {accuracy:.4f}')
+            # Lưu trọng số mô hình
+            model.save_weights(weight_model.format(name_mode, i))
+            
+            # Ghi kết quả vào tệp
+            file.write(f"Model: {name_mode} | Copy_number: {i}\n")
+            file.write(f"Max_output: {number_of_outputs}\n")
+            file.write(f"Accuracy: {accuracy:.4f}\n")
+            file.write(f"Precision: {precision:.4f}\n")
+            file.write(f"Recall: {recall:.4f}\n")
+            file.write(f"F1 Score: {f1:.4f}\n")
+            file.write("Confusion Matrix:\n")
+            
+            # Chuyển confusion matrix thành chuỗi và ghi vào tệp
+            for row in conf_matrix:
+                file.write(" ".join(map(str, row)) + "\n")
+
+            file.write("\n//////////////////////////////////////////////////////////////////////////////////////////////\n\n")
         
-        # Lưu trọng số và bias
-        model.save_weights(weight_model.format(name_mode,i))
+        del model
 
-    del model
-    # Xóa bộ nhớ cache TensorFlow và giải phóng bộ nhớ
 
 def update_weights_on_incorrect_prediction(model, incorrect_sentence_padded, correct_label):
     optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)

@@ -53,11 +53,11 @@ def print_Bt(bt):
     # Loop through each table and corresponding ID in Bt
     for topic, id_value in zip(topics, Bt):
         # Convert numpy int to standard int if necessary
-        if isinstance(id_value, np.int64):
-            id_value = int(id_value)  # Convert to Python int
-
+        
+        id_value = str(id_value)  # Convert to Python str
+        #print("SELECT content FROM dbo.{} WHERE id = {};".format(topic, id_value))
         # Execute query for each table and ID
-        cursor.execute(f"SELECT content FROM dbo.{topic} WHERE id = ?;", id_value)
+        cursor.execute("SELECT content FROM dbo.{} WHERE id = {};".format(topic,id_value))
         
         # Fetch the results and append to content list
         content.append(cursor.fetchall())

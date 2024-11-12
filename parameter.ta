@@ -1,12 +1,14 @@
 number_of_input = 16
-number_of_model = 6
+number_of_model = 10
 number_of_copies_model = 5
 weight_model = 'data_train/weight_model/model_{}{}.weights.h5'
 
+report_train = 'data_train\report\name_model_{}.log'
 file_word_list = 'data_train/word_list.json'
 num_words_list = 10000
 
-topics = ['topology', 'structure', 'performance_metric', 'applications', 'components', 'tools']
+topics = ['question_type', 'question_intent', 'concept1', 'concept2', 'structure', 'performance_metric', 'design_techniques', 'applications', 'components', 'testing_simulations_tools']
+
 file_input_train = 'data_train/input_train/content_question.ta'
 output_train = 'data_train\output_train\o{}.ta'
 
