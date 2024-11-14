@@ -6,6 +6,11 @@ import json
 import data_train.library.train_TNN as TNN
 import data_train.library.module_DST as DST
 import copy
+import os
+import tensorflow as tf
+# Sử dụng tất cả lõi CPU có sẵn
+tf.config.threading.set_intra_op_parallelism_threads(os.cpu_count())
+tf.config.threading.set_inter_op_parallelism_threads(os.cpu_count())
 
 def sentencess(input_sentence, dst):
     # Tạo bản sao lưu của DST ban đầu
