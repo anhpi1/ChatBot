@@ -1,5 +1,6 @@
 You will help me classify the labels for the sentences with the following requirements.
 I have a series of statements and the topic labels of the following statements
+0	NULL
 1	Key components of an analog comparator circuit
 2	Input stage components
 3	Two-stage op-amp components
