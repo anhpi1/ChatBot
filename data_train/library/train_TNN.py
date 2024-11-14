@@ -80,17 +80,18 @@ def train_TNN(name_mode, number_of_input, file_word_list, num_words_list, file_i
     input_sequences = tokenizer.texts_to_sequences(input)
     input_padded = pad_sequences(input_sequences, maxlen=number_of_input)
     
-    input_test1 = read_sentences_from_file('data_train\input_train\content_question-test.ta')
-    input_sequences1 = tokenizer.texts_to_sequences(input_test1)
-    input_padded1 = pad_sequences(input_sequences1, maxlen=number_of_input)
+    input_test = read_sentences_from_file('data_train\input_train\content_question-test.ta')
+    input_sequences_test = tokenizer.texts_to_sequences(input_test)
+    input_padded_test = pad_sequences(input_sequences_test, maxlen=number_of_input)
 
     with open(report_train.format(name_mode), "w", encoding="utf-8") as file:
         for i in range(0, number_of_copies_model):
             # Chia dữ liệu và tạo mô hình như trước
             input_train = input_padded
-            input_test = input_padded1
             output_train = output
-            output_test = output = read_sentences_from_file("data_train\output_train\o{}_test.ta".format(i))
+
+            input_test = input_padded_test     
+            output_test = read_sentences_from_file("data_train\output_train\o{}_test.ta".format(name_mode))
             
             output_train = np.array(output_train, dtype=np.int32)
             output_test = np.array(output_test, dtype=np.int32)
