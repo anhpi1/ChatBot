@@ -9,6 +9,12 @@ import numpy as np
 import json
 import os
 import shutil
+
+
+# Sử dụng tất cả lõi CPU có sẵn
+tf.config.threading.set_intra_op_parallelism_threads(os.cpu_count())
+tf.config.threading.set_inter_op_parallelism_threads(os.cpu_count())
+
 # Hàm đọc file
 def read_sentences_from_file(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
@@ -73,11 +79,18 @@ def train_TNN(name_mode, number_of_input, file_word_list, num_words_list, file_i
     # Mã hóa các câu
     input_sequences = tokenizer.texts_to_sequences(input)
     input_padded = pad_sequences(input_sequences, maxlen=number_of_input)
+    
+    input_test1 = read_sentences_from_file('data_train\input_train\content_question-test.ta')
+    input_sequences1 = tokenizer.texts_to_sequences(input_test1)
+    input_padded1 = pad_sequences(input_sequences1, maxlen=number_of_input)
 
     with open(report_train.format(name_mode), "w", encoding="utf-8") as file:
         for i in range(0, number_of_copies_model):
             # Chia dữ liệu và tạo mô hình như trước
-            input_train, input_test, output_train, output_test = train_test_split(input_padded, output, test_size=0.1)
+            input_train = input_padded
+            input_test = input_padded1
+            output_train = output
+            output_test = output = read_sentences_from_file("data_train\output_train\o{}_test.ta".format(i))
             
             output_train = np.array(output_train, dtype=np.int32)
             output_test = np.array(output_test, dtype=np.int32)
@@ -87,7 +100,7 @@ def train_TNN(name_mode, number_of_input, file_word_list, num_words_list, file_i
 
             # Huấn luyện mô hình
             early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
-            model.fit(input_train, output_train, epochs=6000, batch_size=2, validation_data=(input_test, output_test), callbacks=[early_stopping], verbose=0)
+            model.fit(input_train, output_train, epochs=6000, batch_size=4, validation_data=(input_test, output_test), callbacks=[early_stopping], verbose=1)
 
             # Đánh giá mô hình trên tập kiểm tra
             predictions = model.predict(input_test, verbose=0).argmax(axis=1)
