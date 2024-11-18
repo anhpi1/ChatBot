@@ -1,0 +1,13 @@
+Model:3
+
+Confusion Matrix:
+[[181   2   1   1   2]
+ [  0   0   0   0   0]
+ [  0   0   0   0   0]
+ [  0   0   0   0   0]
+ [  0   0   0   0   0]]
+
+Accuracy: 0.9679
+Precision: 0.2000
+Recall: 0.1936
+F1 Score: 0.1967
