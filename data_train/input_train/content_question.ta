@@ -1,3 +1,190 @@
+Why would you use two stages instead of only one in 2 stage comparator?
+In DC normal operation, What is the input resistance of 2 stage ?
+In DC normal operation, What is the output resistance of 2 stage?
+What are the input and output voltage operating ranges/swings of two stage?
+What is the DC open loop gain of 2 stage?
+How would you increase the gain?
+Does increasing the 1st stage current increase or decrease the gain in 2 stage?
+Does the comparator circuit use a capacitor?
+Does the comparator circuit use a resistor?
+What is the second dominant pole in 2 stage?
+How much attenuation and phase shift does one pole give?
+What is the gain bandwidth product of the two stage comparator?
+What is the positive slew rate?
+How can you increase slew rate?
+What is the negative slew rate?
+What is the common mode rejection ratio (CMRR)?
+Does CMRR get better or worse as you increase frequency?
+What is power supply rejection ratio (PSRR)?
+Write the positive and negative PSRR equations.
+What's the input offset mismatch?
+How does each transistor in the first stage contribute to the input-referred noise in 2 stage?
+Which devices should be matched in 2 stage comparator?
+Where do we use comparator?
+What are the main applications of the comparator?
+What are the basic requirements of a comparator?
+Why do we use comparator in circuits?
+What are the main applications of the comparator?
+What are the four requirements of a good comparator?
+how does an analog comparator work?
+What are the key components of an analog comparator circuit?
+What is the difference between an analog comparator and an operational amplifier?
+How does an analog comparator determine which input is greater?
+What is the purpose of hysteresis in an analog comparator?
+What role do comparators play in analog-to-digital converters (ADCs)?
+How do you test the performance of an analog comparator?
+What are the differences between CMOS and bipolar comparators?
+What is a window comparator
+What textbooks or resources are recommended for learning about comparators?
+What simulation tools can be used to model comparator circuits?
+What components make up the input stage of a two-stage comparator?
+What is the role of the first stage in a two-stage comparator?
+What is the purpose of the second stage in a two-stage comparator?
+What is phase margin in comparator ?
+What types of noise are present in comparator?
+What are common topologies for a comparator?
+what is propagation delay ?
+what feedback is used in comparator ?
+How does a comparator IC work?
+when we use hysteresis comparator?
+how do i increase slew rate of 2 stage comparator ?
+how do i increase gain in 2 stage comparator ?
+how can i set current bias in 2 stage comparator
+Why are comparators analysed in small-signal
+how to increase GBW in 2 stage comparator
+give me 4 comparator topologies ?
+what is characteristics of comparator ?
+what is dynamic characteristics of comparator ?
+what is double tail latch type comparator
+what is dynamic comparator ?
+what is pre amp based comparator ?
+how do i know which topology to choose ?
+what is the advantages of pre amp based comparator ?
+what is the advantages of double tail latch type comparatorr ?
+what is the advantages of dynamic comparatorr ?
+what is the disadvantages of pre amp based comparator ?
+what is the disadvantages of double tail latch type comparator ?
+what is the disadvantages of dynamic comparatorr ?
+what is power consumtion ?
+how many input, ouput does comparator have ?
+What is the role of current mirrors in the input stage?
+How does the gain of the second stage compare to the first stage?
+How does the input transistor's transconductance (gm) affect the overall gain of the first stage?
+what is a comparator ?
+what are the different types of comparator?
+how does a comparator IC work ?
+what are the inputs and outputs of comparator ?
+what is the purpose of a comparator in a circuit ?
+how does a window comparator work ?
+what is a hysteresis comparator ?
+what are the common uses of comparator in the circuits ?
+how is a comparator used in a zero-crossing detector ?
+what role does a comparator play in an ADC ?
+how does a voltage level detector work using a comparator?
+what is gain bandwidth product ?
+what is phase margin ?
+what is slew rate of comparator ?
+what is output voltage swing ?
+what is input offset ?
+what are the key parameters to consider when designing a comparator ?
+what are the specifications of the LM339 comparator IC ?
+how does the LM393 comparator differ from the LM339?
+what are the advantages of using LM339 comparator IC?
+what is IC LM339 PIN configuration?
+When is a comparator circuit used?
+which field comparator circuit is applied in?
+In the field of automatic control, what is the comparator circuit used for?
+What are the static parameters of the comparator circuit?
+What are the dynamic parameters of the comparator circuit?
+Does the static comparator operate on a clock pulse?
+what is rise time ?
+what is fall time ?
+what is propagation delay ?
+What is the bandwidth of the comparator circuit?
+How does noise affect the output of a comparator circuit?
+Where does noise come from?
+What is the power consumption of the comparator circuit?
+What is the speed of the comparator circuit?
+When does kick-back noise occur?
+Which of the two types of comparator circuits, static or dynamic, optimizes power consumption better?
+Of the two types of circuits, static and dynamic, which one requires more complex design techniques?
+What are the basic structures of a comparator circuit?
+how do we choose the W and L sizes of the mosfet to reduce linear resistance?
+what will the output result be If the voltage to be compared is less than the reference voltage?
+what will the output result be If the voltage to be compared is more than the reference voltage?
+How to choose the size of the differential MOSFET pair?
+How to determine the gain of an open loop comparator circuit ?
+How to determine the bandwidth of a comparator circuit?
+How to determine the rise time of a comparator circuit ?
+How to determine the fall time of a comparator circuit ?
+What is the difference between comparator and op amp?
+How is Comparator used in analog to digital conversion?
+what is the different between open-loop comparator and regenerative feedback comparator?
+Why is there no need to compensate for a comparator?
+How does the gain of a comparator affect its resolution?
+What is the meaning of the comparator's output voltage limits VOH?
+What is the meaning of the comparator's output voltage limits VOL?
+Can a Comparator be simulated as a one-bit analogGÇôdigital converter?
+What is the difference between the non-inverting and inverting inputs of a comparator?
+how are the VOH and VOL values GÇïGÇïtypically chosen in a CMOS comparator ?
+How does the ideal model of a comparator differ from the actual model?
+Why are comparators sensitive to noise in the transition region between two binary states?
+What factors affect comparator resolution?
+What is the structure of a two-stage comparator?
+Can the comparator circuit work with a DC power supply?
+Is it necessary to adjust the sensitivity of the comparator circuit?
+Can Comparator use multiple inputs?
+Can the Comparator operate at high frequencies?
+Can the Comparator work with negative voltage?
+Can Comparator be used to detect over-threshold signals?
+How can you improve the stability of a comparator circuit?
+What role does the reference voltage play in a comparator circuit?
+How do temperature variations impact the performance of comparators?
+What factors influence the response time of a comparator?
+Where can you find datasheets for specific comparator ICs?
+How does the layout of a comparator circuit affect its performance?
+How does the slew rate affect a comparator's operation?
+What design techniques can help reduce power consumption in comparator circuits?
+What are the key specifications to consider when choosing a comparator IC?
+What happens if the inputs to a comparator are shorted together?
+What factors contribute to the rise and fall times of a comparator output?
+What are the potential applications of comparators in automotive systems?
+How can you simulate a comparator circuit using software tools?
+How does a comparator respond to rapid changes in input voltage?
+What is the typical symbol used to represent a comparator in circuit diagrams?
+How can you identify a comparator in a circuit?
+What happens to the output of a comparator when the inputs are equal?
+What is the typical input impedance of a comparator?
+What effect does load impedance have on a comparator's output?
+How can a comparator be used in temperature sensing applications?
+What happens to the output of a comparator if the power supply is interrupted?
+What are some common challenges when designing comparator circuits?
+How does the output of a comparator behave in a noisy environment?
+How do you measure the output voltage of a comparator?
+How does a comparator respond to a slowly changing input signal?
+What is the significance of the output logic levels in a comparator?
+How does input noise affect the performance of a comparator?
+what is strong-arm comparator?
+what is the different between 2 stage comparator and strong arm comparator?
+what is hysteresis comparator ?
+what is the advantage of hysteresis comparator ?
+when we use hysteresis comparator?
+Under what conditions will the output of a comparator be high (VOH) and when will it be low (VOL)?
+How is the output of a comparator determined based on two analog inputs?
+How does the output transition between VOL and VOH in the ideal model?
+Why is gain considered an important characteristic for a comparator?
+What are the typical values for VOH and VOL in CMOS technology?
+How does the presence of offset voltage affect the output of a comparator?
+What is input-offset voltage (VOS) ?
+What is the input common-mode range (ICMR) ?
+What is formula small signal gain of two stage comparator ?
+why hysteresis is needed in comparator ?
+what is high speed comparator ?
+what is basic principle behind high speed comparator ?
+What is VIH ?
+What is VIL ?
+what is resolution in comparator ?
+what is slew rate of comparator ?
 Why do we use operational amplifiers (op-amps) in comparator circuits?
 Why is it important to choose the right reference voltage in a comparator circuit?
 Why are hysteresis and positive feedback necessary in some comparator circuits?
