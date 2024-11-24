@@ -1,5 +1,5 @@
 number_of_input = 32
-number_of_model = 6
+number_of_model = 3
 number_of_copies_model = 5
 weight_model = 'data_train/weight_model/model_{}{}.weights.h5'
 

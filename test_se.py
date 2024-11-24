@@ -5,11 +5,11 @@ import time
 # Đường dẫn file đầu vào, đầu ra và file log
 file_input = 'data_train\\input_train\\content_question-test.ta'
 file_output = 'data_train\\output_train\\o{}_test.ta'
-file_log = 'data_train\\report\\test_{}.log'
+file_log = 'data_train\\report\\test_{}_bagging_booting.log'
 
 Bt_test_T = []
 # Đọc dữ liệu từ file_output cho từng chỉ số từ 0 đến 3
-for i in range(6):
+for i in range(3):
     with open(file_output.format(i), "r", encoding="utf-8") as output_file:
         # Đọc từng dòng trong file và lấy cột cho Bt_test_T
         lines = output_file.readlines()  # Đọc tất cả dòng trong file
@@ -50,7 +50,7 @@ for line in lines:
         output_train = value.strip("'")
 
 # Lặp qua các chỉ số từ 0 đến 3 (tính cho từng ma trận)
-for i in range(6):
+for i in range(0,3):
     file_output_train=output_train.format(i)
     with open(file_output_train, "r") as file:
         numbers = file.readlines()
@@ -67,12 +67,13 @@ for i in range(6):
         cm = confusion_matrix(Bt_matrix_T[i], Bt_test_T[i], labels=[label for label in range(number_of_outputs)])
         
         # Tính các chỉ số đánh giás
-        accuracy = accuracy_score(Bt_matrix_T[i], Bt_test_T[i],average='macro', zero_division=0,labels=[label for label in range(number_of_outputs)])
-        precision = precision_score(Bt_matrix_T[i], Bt_test_T[i], average='macro', zero_division=0,labels=[label for label in range(number_of_outputs)])
-        recall = recall_score(Bt_matrix_T[i], Bt_test_T[i], average='macro', zero_division=0,labels=[label for label in range(number_of_outputs)])
-        f1 = f1_score(Bt_matrix_T[i], Bt_test_T[i], average='macro', zero_division=0,labels=[label for label in range(number_of_outputs)])
+        accuracy = accuracy_score(Bt_matrix_T[i], Bt_test_T[i])
+        precision = precision_score(Bt_matrix_T[i], Bt_test_T[i], average='macro', zero_division=0)
+        recall = recall_score(Bt_matrix_T[i], Bt_test_T[i], average='macro', zero_division=0)
+        f1 = f1_score(Bt_matrix_T[i], Bt_test_T[i], average='macro', zero_division=0)
         
         # Ghi vào file log
+        log_file.write(f"time:{elapsed_time}\n\n")
         log_file.write(f"Model:{i}\n\n")
         log_file.write("Confusion Matrix:\n")
         log_file.write(f"{cm}\n\n")

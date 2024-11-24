@@ -107,11 +107,11 @@ def train_TNN(name_mode, number_of_input, file_word_list, num_words_list, file_i
             predictions = model.predict(input_test, verbose=0).argmax(axis=1)
 
             # Tính các chỉ số đánh giá
-            accuracy = accuracy_score(output_test, predictionsaverage='macro',zero_division=0,labels=[label for label in range(number_of_outputs)])
-            precision = precision_score(output_test, predictions, average='macro',zero_division=0,labels=[label for label in range(number_of_outputs)])
-            recall = recall_score(output_test, predictions, average='macro',zero_division=0,labels=[label for label in range(number_of_outputs)])
-            f1 = f1_score(output_test, predictions, average='macro',zero_division=0,labels=[label for label in range(number_of_outputs)])
-            conf_matrix = confusion_matrix(output_test, predictions,zero_division=0, labels=[label for label in range(number_of_outputs)])
+            accuracy = accuracy_score(output_test, predictions)
+            precision = precision_score(output_test, predictions, average='macro',zero_division=0)
+            recall = recall_score(output_test, predictions, average='macro',zero_division=0)
+            f1 = f1_score(output_test, predictions, average='macro',zero_division=0)
+            conf_matrix = confusion_matrix(output_test, predictions)
 
             # In kết quả
             print(f"Model: {name_mode} Copy_number: {i}")
@@ -144,91 +144,89 @@ def train_TNN(name_mode, number_of_input, file_word_list, num_words_list, file_i
 
 
 def update_weights_on_incorrect_prediction(model, incorrect_sentence_padded, correct_label):
-    return 
-    # optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
-    # loss_fn = tf.keras.losses.SparseCategoricalCrossentropy()
-    # count=0
-    # correct_label = np.array([correct_label])
-    # while True:
-    #     with tf.GradientTape() as tape:
-    #         logits = model(incorrect_sentence_padded, training=True)
-    #         loss_value = loss_fn(correct_label, logits)
+    optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
+    loss_fn = tf.keras.losses.SparseCategoricalCrossentropy()
+    count=0
+    correct_label = np.array([correct_label])
+    while True:
+        with tf.GradientTape() as tape:
+            logits = model(incorrect_sentence_padded, training=True)
+            loss_value = loss_fn(correct_label, logits)
         
-    #     grads = tape.gradient(loss_value, model.trainable_weights)
-    #     optimizer.apply_gradients(zip(grads, model.trainable_weights))
-    #     count += 1
-    #     if (loss_value < 0.0001) or (count > 1000):
-    #         break
-    # # print("correct lable:{}".format(correct_label))
-    # # print(f"Trọng số đã được cập nhật với loss: {loss_value.numpy():.4f}")
+        grads = tape.gradient(loss_value, model.trainable_weights)
+        optimizer.apply_gradients(zip(grads, model.trainable_weights))
+        count += 1
+        if True: #(loss_value < 0.0001) or (count > 1000):
+            break
+    # print("correct lable:{}".format(correct_label))
+    # print(f"Trọng số đã được cập nhật với loss: {loss_value.numpy():.4f}")
 
 def update_weights_models(name_models, input, correct_label):
-    return
-    # # Khởi tạo tham số
-    # number_of_input = 0
-    # file_word_list = ''
-    # num_words_list = 0
-    # number_of_outputs = 0
-    # number_of_copies_model = 0
+    # Khởi tạo tham số
+    number_of_input = 0
+    file_word_list = ''
+    num_words_list = 0
+    number_of_outputs = 0
+    number_of_copies_model = 0
 
-    # # Tải tham số
-    # with open("parameter.ta", "r") as file:
-    #     lines = file.readlines()
-    # for line in lines:
-    #     if not line.strip():  # Bỏ qua dòng trống
-    #         continue
-    #     key, value = line.split(" = ")
-    #     key, value = key.strip(), value.strip()
-    #     if key == "number_of_input" and value.isdigit():
-    #         number_of_input = int(value)
-    #     elif key == "num_words_list" and value.isdigit():
-    #         num_words_list = int(value)
-    #     elif key == "number_of_copies_model" and value.isdigit():
-    #         number_of_copies_model = int(value)
-    #     elif key == "file_word_list":
-    #         file_word_list = value.strip("'")
-    #     elif key == "output_train":
-    #         output_train = value.strip("'")
-    #     elif key == "weight_model":
-    #         weight_model = value.strip("'")
-    # # Tải word index
-    # try:
-    #     with open(file_word_list, 'r') as json_file:
-    #         word_index = json.load(json_file)
-    # except FileNotFoundError:
-    #     print(f"Không tìm thấy tệp danh sách từ {file_word_list}.")
-    #     return None
+    # Tải tham số
+    with open("parameter.ta", "r") as file:
+        lines = file.readlines()
+    for line in lines:
+        if not line.strip():  # Bỏ qua dòng trống
+            continue
+        key, value = line.split(" = ")
+        key, value = key.strip(), value.strip()
+        if key == "number_of_input" and value.isdigit():
+            number_of_input = int(value)
+        elif key == "num_words_list" and value.isdigit():
+            num_words_list = int(value)
+        elif key == "number_of_copies_model" and value.isdigit():
+            number_of_copies_model = int(value)
+        elif key == "file_word_list":
+            file_word_list = value.strip("'")
+        elif key == "output_train":
+            output_train = value.strip("'")
+        elif key == "weight_model":
+            weight_model = value.strip("'")
+    # Tải word index
+    try:
+        with open(file_word_list, 'r') as json_file:
+            word_index = json.load(json_file)
+    except FileNotFoundError:
+        print(f"Không tìm thấy tệp danh sách từ {file_word_list}.")
+        return None
 
-    # tokenizer = Tokenizer(num_words=num_words_list, oov_token="<OOV>")
-    # tokenizer.word_index = word_index
+    tokenizer = Tokenizer(num_words=num_words_list, oov_token="<OOV>")
+    tokenizer.word_index = word_index
 
-    # # Đảm bảo input là một danh sách các câu
-    # if isinstance(input, str):
-    #     input = [input]
+    # Đảm bảo input là một danh sách các câu
+    if isinstance(input, str):
+        input = [input]
 
-    # input_sequences = tokenizer.texts_to_sequences(input)
-    # incorrect_sentence_padded = pad_sequences(input_sequences, maxlen=number_of_input)
+    input_sequences = tokenizer.texts_to_sequences(input)
+    incorrect_sentence_padded = pad_sequences(input_sequences, maxlen=number_of_input)
 
-    # # Đảm bảo correct_label có định dạng (batch_size,)
-    # correct_label = np.array([correct_label])
+    # Đảm bảo correct_label có định dạng (batch_size,)
+    correct_label = np.array([correct_label])
 
-    # # Tải các mô hình với trọng số tương ứng và cập nhật trọng số
-    # for i in range(number_of_copies_model):
-    #     file_output_train = output_train.format(name_models)
-    #     try:
-    #         with open(file_output_train, "r") as file:
-    #             numbers = file.readlines()
-    #         number_of_outputs = max(int(number.strip()) for number in numbers) + 1
-    #     except FileNotFoundError:
-    #         print(f"Không tìm thấy tệp đầu ra train {file_output_train}.")
-    #         continue
+    # Tải các mô hình với trọng số tương ứng và cập nhật trọng số
+    for i in range(number_of_copies_model):
+        file_output_train = output_train.format(name_models)
+        try:
+            with open(file_output_train, "r") as file:
+                numbers = file.readlines()
+            number_of_outputs = max(int(number.strip()) for number in numbers) + 1
+        except FileNotFoundError:
+            print(f"Không tìm thấy tệp đầu ra train {file_output_train}.")
+            continue
 
-    #     new_model = create_model(number_of_outputs, number_of_input, num_words_list)
-    #     new_model.load_weights(weight_model.format(name_models,i))
-    #     # print("input:{}".format(input))
-    #     # print("{}{}".format(name_models,i))
+        new_model = create_model(number_of_outputs, number_of_input, num_words_list)
+        new_model.load_weights(weight_model.format(name_models,i))
+        # print("input:{}".format(input))
+        # print("{}{}".format(name_models,i))
 
-    #     # Gọi hàm update_weights_on_incorrect_prediction với đầu vào đã điều chỉnh
-    #     update_weights_on_incorrect_prediction(new_model, incorrect_sentence_padded, correct_label)
-    #     new_model.save_weights(weight_model.format(name_models,i))    
+        # Gọi hàm update_weights_on_incorrect_prediction với đầu vào đã điều chỉnh
+        update_weights_on_incorrect_prediction(new_model, incorrect_sentence_padded, correct_label)
+        new_model.save_weights(weight_model.format(name_models,i))    
         
