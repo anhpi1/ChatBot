@@ -1,0 +1,6 @@
+How does the presence of offset voltage affect the output of a comparator?
+What is input-offset voltage (VOS) ?
+How does the presence of offset voltage affect the output of a comparator?
+What is input-offset voltage (VOS) ?
+How does the presence of offset voltage affect the output of a comparator?
+What is input-offset voltage (VOS) ?

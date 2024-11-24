@@ -64,7 +64,7 @@ for i in range(6):
         
         
 
-        cm = confusion_matrix(Bt_matrix_T[i], Bt_test_T[i],zero_division=0, labels=[label for label in range(number_of_outputs)])
+        cm = confusion_matrix(Bt_matrix_T[i], Bt_test_T[i], labels=[label for label in range(number_of_outputs)])
         
         # Tính các chỉ số đánh giás
         accuracy = accuracy_score(Bt_matrix_T[i], Bt_test_T[i],average='macro', zero_division=0,labels=[label for label in range(number_of_outputs)])

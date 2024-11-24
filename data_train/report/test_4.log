@@ -1,5 +1,8 @@
 Model:4
-
+Accuracy: 0.9358
+Precision: 0.1420
+Recall: 0.1359
+F1 Score: 0.1389
 Confusion Matrix:
 [[175   2   0   3   1   1   2]
  [  0   0   0   0   0   0   0]
@@ -9,7 +12,4 @@ Confusion Matrix:
  [  0   0   0   0   0   0   0]
  [  0   0   0   0   0   0   0]]
 
-Accuracy: 0.9358
-Precision: 0.1420
-Recall: 0.1359
-F1 Score: 0.1389
+
