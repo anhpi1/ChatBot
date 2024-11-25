@@ -1,0 +1,57 @@
+import tkinter as tk
+from tkinter import scrolledtext
+import requests
+
+TRANSLATOR_KEY = '8Psb1UBxAiPhwgsuHKUkT0yJtOW4uTrELBDzxmk1JloqnIr70YYhJQQJ99AKACqBBLyXJ3w3AAAbACOGt7Xz' 
+TRANSLATOR_ENDPOINT = 'https://api.cognitive.microsofttranslator.com/translate'
+REGION = 'southeastasia'  
+
+# Function to call Azure Translator API
+def translate_text(text, target_language="en"):
+    headers = {
+        'Ocp-Apim-Subscription-Key': TRANSLATOR_KEY,
+        'Ocp-Apim-Subscription-Region': REGION,
+        'Content-Type': 'application/json'
+    }
+    body = [{'Text': text}]
+    params = {'api-version': '3.0', 'to': target_language}
+
+    response = requests.post(TRANSLATOR_ENDPOINT, headers=headers, params=params, json=body)
+    if response.status_code == 200:
+        return response.json()[0]['translations'][0]['text']
+    else:
+        return f"Error: {response.status_code}, {response.text}"
+
+# Function to handle sending messages
+def send_message():
+    user_input = user_entry.get()
+    if not user_input.strip():
+        return
+    chatbox.config(state=tk.NORMAL)
+    chatbox.insert(tk.END, f"You: {user_input}\n")
+    chatbox.config(state=tk.DISABLED)
+    try:
+        translated_text = translate_text(user_input)
+        chatbox.config(state=tk.NORMAL)
+        chatbox.insert(tk.END, f"Bot: {translated_text}\n")
+        chatbox.config(state=tk.DISABLED)
+    except Exception as e:
+        chatbox.config(state=tk.NORMAL)
+        chatbox.insert(tk.END, f"Bot: Error - {str(e)}\n")
+        chatbox.config(state=tk.DISABLED)
+    user_entry.delete(0, tk.END)
+
+root = tk.Tk()
+root.title("Chatbot Comparator")
+
+chatbox = scrolledtext.ScrolledText(root, wrap=tk.WORD, width=50, height=20, bg="#f7f7f7", fg="black")
+chatbox.grid(row=0, column=0, columnspan=2, padx=10, pady=10)
+chatbox.config(state=tk.DISABLED)
+
+user_entry = tk.Entry(root, width=40)
+user_entry.grid(row=1, column=0, padx=10, pady=10)
+
+send_button = tk.Button(root, text="Send", command=send_message, bg="#007bff", fg="white")
+send_button.grid(row=1, column=1, padx=10, pady=10)
+
+root.mainloop()
