@@ -1,6 +1,6 @@
 number_of_input = 32
-number_of_model = 3
-number_of_copies_model = 5
+number_of_model = 1
+number_of_copies_model = 1
 weight_model = 'data_train/weight_model/model_{}{}.weights.h5'
 
 report_train = 'data_train\report\name_model_{}.log'

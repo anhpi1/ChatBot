@@ -97,14 +97,6 @@ def sentencess(input_sentence, dst):
         values, counts = np.unique(temp, return_counts=True)
         most_frequent = values[np.argmax(counts)]
         Bt.append(most_frequent)
-
-        for i, prediction in enumerate(temp):
-            #print("temp {}{}:{}".format(name_mode,i,temp))
-            if prediction != most_frequent:
-                TNN.update_weights_on_incorrect_prediction(models[i], Ut, most_frequent)
-                models[i].save_weights(weight_model.format(name_mode,i))
-                #print("update: {}{}".format(name_mode,i))
-
         del models  # Xóa các mô hình khỏi bộ nhớ sau khi sử dụng
 
     # Cập nhật DST
